@@ -8,10 +8,11 @@ from PyQt5.QtCore import QTimer
 
 #creates class for widgets
 class Calculator(QWidget):
-    def __init__(self):
+    def __init__(self, model):
         super().__init__()
         self.initUI()
         self.on = False
+        self.model = model
 
 #creates function for GUI
 
@@ -104,7 +105,7 @@ class Calculator(QWidget):
         if self.on:
             self.powerButton.setText('Power Off')
             self.calculateButton.setEnabled(True)
-            self.progressDialog = QProgressDialog("Intializing Casio...", "Cancel", 0, 100, self)
+            self.progressDialog = QProgressDialog("Intializing " + self.model + " ...", "Cancel", 0, 100, self)
             self.progressDialog.setWindowModality(Qt.WindowModal)
             self.progressDialog.setWindowTitle("Progress")
             self.progressDialog.setAutoClose(True)

@@ -17,7 +17,7 @@ class Calculator(QWidget):
 
     def initUI(self):
         # Create QLabel for the operation selection
-        self.operationLabel = QLabel('Choose an operation:')
+        self.operationLabel = QLabel('Please enter your number before choosing an operation:')
         self.operationLabel.setAlignment(Qt.AlignCenter)
 
         # Create QPushButton for addition operation
@@ -125,18 +125,73 @@ class Calculator(QWidget):
     # Create a function for the addition operation
     def addition(self):
         self.setOperation(1)
+        num1 = self.num1LineEdit.text()
+        num2 = self.num2LineEdit.text()
+        try:
+            num1 = float(num1)
+            num2 = float(num2)
+        except ValueError:
+            self.num1LineEdit.clear()
+            self.num2LineEdit.clear()
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
+                                           QMessageBox.Ok)
+        result = num1 + num2
+        self.displayResult(result)
 
     # Create a function for the subtraction operation
     def subtraction(self):
         self.setOperation(2)
+        num1 = self.num1LineEdit.text()
+        num2 = self.num2LineEdit.text()
+        try:
+            num1 = float(num1)
+            num2 = float(num2)
+        except ValueError:
+            self.num1LineEdit.clear()
+            self.num2LineEdit.clear()
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
+                                           QMessageBox.Ok)
+        result = num1 - num2
+        self.displayResult(result)
 
     # Create a function for the multiplication operation
     def multiplication(self):
         self.setOperation(3)
+        num1 = self.num1LineEdit.text()
+        num2 = self.num2LineEdit.text()
+        try:
+            num1 = float(num1)
+            num2 = float(num2)
+        except ValueError:
+            self.num1LineEdit.clear()
+            self.num2LineEdit.clear()
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
+                                           QMessageBox.Ok)
+        result = num1 * num2
+        self.displayResult(result)
+
 
     # Create a function for the division operation
     def division(self):
         self.setOperation(4)
+        num1 = self.num1LineEdit.text()
+        num2 = self.num2LineEdit.text()
+        try:
+            num1 = float(num1)
+            num2 = float(num2)
+        except ValueError:
+            self.num1LineEdit.clear()
+            self.num2LineEdit.clear()
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
+                                           QMessageBox.Ok)
+        try:
+            result = num1 / num2
+            self.resultLabel.setText('Zero Division not allowed')
+        except ZeroDivisionError:
+            self.num2LineEdit.clear()
+            return QMessageBox.information(self, 'Syntax Error', 'Zero Division not allowed', QMessageBox.Ok)
+
+        self.displayResult(result)
 
 #Create a function for the selected operation
     def setOperation(self, operation):
@@ -163,31 +218,22 @@ class Calculator(QWidget):
 #if operator is not selected, prompts user to choose an operator
         if not hasattr(self, 'operation'):
             return QMessageBox.information(self, 'Operation Error', 'Please choose an operation', QMessageBox.Ok)
-        
-# Calculate result based on selected operation
-        #For addition
+ 
+        # Calculate result based on selected operation
         if self.operation == 1:
-            result = num1 + num2
-        #For subtraction
+            self.addition()
         elif self.operation == 2:
-            result = num1 - num2
-        #For multiplication
+            self.subtraction()
         elif self.operation == 3:
-            result = num1 * num2
-        #for division
+            self.multiplication()
         elif self.operation == 4:
-            try:
-                #Does not allow zero division
-                result = num1 / num2
-                self.resultLabel.setText('Zero Division not allowed')
-            except ZeroDivisionError:
-                #clears initial input and displays error message
-                self.num2LineEdit.clear()
-                return QMessageBox.information(self, 'Syntax Error', 'Zero Division not allowed', QMessageBox.Ok)
+            self.division()
 
-# Display result
+    # Create a function to display the result
+    def displayResult(self, result):
         self.screenDisplay.setText(str(result))
-#Asks user if they want to try again
+
+        # Asks user if they want to try again
         messageBox = QMessageBox()
         messageBox.setIcon(QMessageBox.Question)
         messageBox.setText("Do you want to try again?")
@@ -195,11 +241,11 @@ class Calculator(QWidget):
         messageBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
         response = messageBox.exec_()
-        #If yes, repeats process
+        # If yes, clears input fields
         if response == QMessageBox.Yes:
             self.num1LineEdit.clear()
             self.num2LineEdit.clear()
-        #If no, displays thank you message and closes program
+        # If no, displays thank you message and closes program
         else:
             Tymsg = QMessageBox()
             Tymsg.setWindowTitle("Message")

@@ -1,5 +1,4 @@
 #Imports necessary elements
-import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QProgressDialog
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *

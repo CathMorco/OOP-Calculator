@@ -8,11 +8,15 @@ from PyQt5.QtCore import QTimer
 
 #creates class for widgets
 class Calculator(QWidget):
-    def __init__(self, model):
+    def __init__(self, model, x, y):
         super().__init__()
+        self.positionx = x
+        self.positiony = y
+        self.model = model
         self.initUI()
         self.on = False
-        self.model = model
+
+
 
 #creates function for GUI
 
@@ -95,8 +99,9 @@ class Calculator(QWidget):
         
 
 # Set window properties
-        self.setWindowTitle('Calculator')
-        self.setGeometry(100, 100, 500, 800)
+        self.setWindowTitle('Calculator ' + self.model)
+
+        self.setGeometry(self.positionx, self.positiony, 500, 800)
         self.show()
 
 

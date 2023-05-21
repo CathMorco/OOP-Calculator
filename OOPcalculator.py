@@ -1,14 +1,17 @@
 #Imports necessary elements
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QProgressDialog
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from PyQt5.QtCore import QTimer
+
 #creates class for widgets
 class Calculator(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.on = False
 
 #creates function for GUI
 
@@ -28,6 +31,9 @@ class Calculator(QWidget):
 
         # Create QPushButton for division operation
         self.divButton = QPushButton('/')
+
+        # Create QPushButton for power control
+        self.powerButton = QPushButton('Power On')
 
         # Create QLabel and QLineEdit for the first number input
         self.num1Label = QLabel('Enter the first number:')
@@ -58,6 +64,7 @@ class Calculator(QWidget):
         vbox.addWidget(self.num2LineEdit)
         vbox.addWidget(self.calculateButton)
         vbox.addWidget(self.resultLabel)
+        vbox.addWidget(self.powerButton)
 
         # Set layout for the window
         self.setLayout(vbox)
@@ -68,6 +75,7 @@ class Calculator(QWidget):
         self.mulButton.clicked.connect(lambda: self.setOperation(3))
         self.divButton.clicked.connect(lambda: self.setOperation(4))
         self.calculateButton.clicked.connect(self.calculateResult)
+        self.powerButton.clicked.connect(self.togglePower)
 
         self.screenDisplay = QLabel(self)
 
@@ -83,15 +91,48 @@ class Calculator(QWidget):
                                  "border : 1px solid grey;"
                                  "background : grey;"
                                  "}")
+        
+
 # Set window properties
         self.setWindowTitle('Calculator')
-        self.setGeometry(100, 100, 500, 400)
+        self.setGeometry(100, 100, 500, 800)
         self.show()
+
+
+    def togglePower(self):
+        self.on = not self.on
+        if self.on:
+            self.powerButton.setText('Power Off')
+            self.calculateButton.setEnabled(True)
+            self.progressDialog = QProgressDialog("Calculating...", "Cancel", 0, 100, self)
+            self.progressDialog.setWindowModality(Qt.WindowModal)
+            self.progressDialog.setWindowTitle("Progress")
+            self.progressDialog.setAutoClose(False)
+            self.progressDialog.show()
+            self.progressTimer = QTimer()
+            self.progressTimer.timeout.connect(self.updateProgress)
+            self.progressTimer.start(100)
+        else:
+            self.powerButton.setText('Power On')
+            self.calculateButton.setEnabled(False)
+            self.progressTimer.stop()
+            self.progressDialog.close()
+
+    def updateProgress(self):
+        if self.progressDialog.value() >= 100:
+            self.progressDialog.setValue(0)
+        else:
+            self.progressDialog.setValue(self.progressDialog.value() + 1)
+
 #Create a function for the selected operation
     def setOperation(self, operation):
         self.operation = operation
 #create function for calculate button
     def calculateResult(self):
+
+        if not self.on:
+            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
+
         # Get user inputs from QLineEdits
         num1 = self.num1LineEdit.text()
         num2 = self.num2LineEdit.text()
@@ -149,9 +190,4 @@ class Calculator(QWidget):
             Tymsg.setWindowTitle("Message")
             Tymsg.setText("Thank you!")
             x = Tymsg.exec_()
-            sys.exit(app.exec_())
-#runs the main program
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    Calculator()
-    sys.exit(app.exec_())
+            sys.exit()

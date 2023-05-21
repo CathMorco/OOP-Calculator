@@ -107,11 +107,12 @@ class Calculator(QWidget):
             self.progressDialog = QProgressDialog("Calculating...", "Cancel", 0, 100, self)
             self.progressDialog.setWindowModality(Qt.WindowModal)
             self.progressDialog.setWindowTitle("Progress")
-            self.progressDialog.setAutoClose(False)
+            self.progressDialog.setAutoClose(True)
             self.progressDialog.show()
             self.progressTimer = QTimer()
             self.progressTimer.timeout.connect(self.updateProgress)
-            self.progressTimer.start(100)
+            self.progressTimer.start(10)
+            
         else:
             self.powerButton.setText('Power On')
             self.calculateButton.setEnabled(False)
@@ -119,9 +120,6 @@ class Calculator(QWidget):
             self.progressDialog.close()
 
     def updateProgress(self):
-        if self.progressDialog.value() >= 100:
-            self.progressDialog.setValue(0)
-        else:
             self.progressDialog.setValue(self.progressDialog.value() + 1)
 
 #Create a function for the selected operation

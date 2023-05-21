@@ -157,8 +157,7 @@ class Calculator(QWidget):
         except ValueError:
             self.num1LineEdit.clear()
             self.num2LineEdit.clear()
-            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
-                                           QMessageBox.Ok)
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only', QMessageBox.Ok)
         result = num1 - num2
         self.displayResult(result)
 
@@ -174,8 +173,7 @@ class Calculator(QWidget):
         except ValueError:
             self.num1LineEdit.clear()
             self.num2LineEdit.clear()
-            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
-                                           QMessageBox.Ok)
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only', QMessageBox.Ok)
         result = num1 * num2
         self.displayResult(result)
 
@@ -192,8 +190,7 @@ class Calculator(QWidget):
         except ValueError:
             self.num1LineEdit.clear()
             self.num2LineEdit.clear()
-            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
-                                           QMessageBox.Ok)
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only', QMessageBox.Ok)
         try:
             result = num1 / num2
             self.resultLabel.setText('Zero Division not allowed')
@@ -225,4 +222,4 @@ class Calculator(QWidget):
             Tymsg.setWindowTitle("Message")
             Tymsg.setText("Thank you!")
             x = Tymsg.exec_()
-            sys.exit()
+            self.close()

@@ -50,9 +50,6 @@ class Calculator(QWidget):
         self.num2Label.setAlignment(Qt.AlignCenter)
         self.num2LineEdit = QLineEdit()
 
-        # Create QPushButton for calculating the result
-        self.calculateButton = QPushButton('Calculate')
-
         # Create QLabel for displaying the result
         self.resultLabel = QLabel()
 
@@ -67,7 +64,6 @@ class Calculator(QWidget):
         vbox.addWidget(self.num1LineEdit)
         vbox.addWidget(self.num2Label)
         vbox.addWidget(self.num2LineEdit)
-        vbox.addWidget(self.calculateButton)
         vbox.addWidget(self.resultLabel)
         vbox.addWidget(self.powerButton)
 
@@ -79,7 +75,6 @@ class Calculator(QWidget):
         self.subButton.clicked.connect(lambda: self.subtraction())
         self.mulButton.clicked.connect(lambda: self.multiplication())
         self.divButton.clicked.connect(lambda: self.division())
-        self.calculateButton.clicked.connect(self.calculateResult)
         self.powerButton.clicked.connect(self.togglePower)
 
         self.screenDisplay = QLabel(self)
@@ -109,7 +104,10 @@ class Calculator(QWidget):
         self.on = not self.on
         if self.on:
             self.powerButton.setText('Power Off')
-            self.calculateButton.setEnabled(True)
+            self.addButton.setEnabled(True)
+            self.subButton.setEnabled(True)
+            self.mulButton.setEnabled(True)
+            self.divButton.setEnabled(True)
             self.progressDialog = QProgressDialog("Intializing " + self.model + " ...", "Cancel", 0, 100, self)
             self.progressDialog.setWindowModality(Qt.WindowModal)
             self.progressDialog.setWindowTitle("Progress")
@@ -121,7 +119,10 @@ class Calculator(QWidget):
             
         else:
             self.powerButton.setText('Power On')
-            self.calculateButton.setEnabled(False)
+            self.addButton.setEnabled(False)
+            self.subButton.setEnabled(False)
+            self.mulButton.setEnabled(False)
+            self.divButton.setEnabled(False)
             self.progressTimer.stop()
             self.progressDialog.close()
 
@@ -130,7 +131,8 @@ class Calculator(QWidget):
 
     # Create a function for the addition operation
     def addition(self):
-        self.setOperation(1)
+        if not self.on:
+            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
         num1 = self.num1LineEdit.text()
         num2 = self.num2LineEdit.text()
         try:
@@ -139,14 +141,14 @@ class Calculator(QWidget):
         except ValueError:
             self.num1LineEdit.clear()
             self.num2LineEdit.clear()
-            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only',
-                                           QMessageBox.Ok)
+            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only', QMessageBox.Ok)
         result = num1 + num2
         self.displayResult(result)
 
     # Create a function for the subtraction operation
     def subtraction(self):
-        self.setOperation(2)
+        if not self.on:
+            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
         num1 = self.num1LineEdit.text()
         num2 = self.num2LineEdit.text()
         try:
@@ -162,7 +164,8 @@ class Calculator(QWidget):
 
     # Create a function for the multiplication operation
     def multiplication(self):
-        self.setOperation(3)
+        if not self.on:
+            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
         num1 = self.num1LineEdit.text()
         num2 = self.num2LineEdit.text()
         try:
@@ -179,7 +182,8 @@ class Calculator(QWidget):
 
     # Create a function for the division operation
     def division(self):
-        self.setOperation(4)
+        if not self.on:
+            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
         num1 = self.num1LineEdit.text()
         num2 = self.num2LineEdit.text()
         try:
@@ -198,42 +202,6 @@ class Calculator(QWidget):
             return QMessageBox.information(self, 'Syntax Error', 'Zero Division not allowed', QMessageBox.Ok)
 
         self.displayResult(result)
-
-#Create a function for the selected operation
-    def setOperation(self, operation):
-        self.operation = operation
-#create function for calculate button
-    def calculateResult(self):
-
-        if not self.on:
-            return QMessageBox.information(self, 'Error Message', 'Please turn the Power On' , QMessageBox.Ok)
-
-        # Get user inputs from QLineEdits
-        num1 = self.num1LineEdit.text()
-        num2 = self.num2LineEdit.text()
-
-        #If input is not float, displays error message and clears initial input
-        try:
-            num1 = float(num1)
-            num2 = float(num2)
-        except ValueError:
-            self.num1LineEdit.clear()
-            self.num2LineEdit.clear()
-            return QMessageBox.information(self, 'Value Error', 'Invalid Input, Please Input Numbers Only', QMessageBox.Ok)
-        
-#if operator is not selected, prompts user to choose an operator
-        if not hasattr(self, 'operation'):
-            return QMessageBox.information(self, 'Operation Error', 'Please choose an operation', QMessageBox.Ok)
- 
-        # Calculate result based on selected operation
-        if self.operation == 1:
-            self.addition()
-        elif self.operation == 2:
-            self.subtraction()
-        elif self.operation == 3:
-            self.multiplication()
-        elif self.operation == 4:
-            self.division()
 
     # Create a function to display the result
     def displayResult(self, result):

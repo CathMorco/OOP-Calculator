@@ -70,10 +70,10 @@ class Calculator(QWidget):
         self.setLayout(vbox)
 
         # Connect signals and slots
-        self.addButton.clicked.connect(lambda: self.setOperation(1))
-        self.subButton.clicked.connect(lambda: self.setOperation(2))
-        self.mulButton.clicked.connect(lambda: self.setOperation(3))
-        self.divButton.clicked.connect(lambda: self.setOperation(4))
+        self.addButton.clicked.connect(lambda: self.addition())
+        self.subButton.clicked.connect(lambda: self.subtraction())
+        self.mulButton.clicked.connect(lambda: self.multiplication())
+        self.divButton.clicked.connect(lambda: self.division())
         self.calculateButton.clicked.connect(self.calculateResult)
         self.powerButton.clicked.connect(self.togglePower)
 
@@ -104,7 +104,7 @@ class Calculator(QWidget):
         if self.on:
             self.powerButton.setText('Power Off')
             self.calculateButton.setEnabled(True)
-            self.progressDialog = QProgressDialog("Calculating...", "Cancel", 0, 100, self)
+            self.progressDialog = QProgressDialog("Intializing Casio...", "Cancel", 0, 100, self)
             self.progressDialog.setWindowModality(Qt.WindowModal)
             self.progressDialog.setWindowTitle("Progress")
             self.progressDialog.setAutoClose(True)
@@ -121,6 +121,22 @@ class Calculator(QWidget):
 
     def updateProgress(self):
             self.progressDialog.setValue(self.progressDialog.value() + 1)
+
+    # Create a function for the addition operation
+    def addition(self):
+        self.setOperation(1)
+
+    # Create a function for the subtraction operation
+    def subtraction(self):
+        self.setOperation(2)
+
+    # Create a function for the multiplication operation
+    def multiplication(self):
+        self.setOperation(3)
+
+    # Create a function for the division operation
+    def division(self):
+        self.setOperation(4)
 
 #Create a function for the selected operation
     def setOperation(self, operation):
@@ -147,6 +163,7 @@ class Calculator(QWidget):
 #if operator is not selected, prompts user to choose an operator
         if not hasattr(self, 'operation'):
             return QMessageBox.information(self, 'Operation Error', 'Please choose an operation', QMessageBox.Ok)
+        
 # Calculate result based on selected operation
         #For addition
         if self.operation == 1:
